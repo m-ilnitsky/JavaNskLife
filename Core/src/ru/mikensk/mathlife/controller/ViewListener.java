@@ -21,4 +21,6 @@ public interface ViewListener {
     GameMap getMap();
 
     int getStep();
+
+    int getNumAliveCells();
 }

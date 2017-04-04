@@ -164,4 +164,9 @@ public class LifeCore implements LifeInterface {
     public int getStep() {
         return step;
     }
+
+    @Override
+    public int getNumAliveCells() {
+        return numAliveCells;
+    }
 }

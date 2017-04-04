@@ -26,28 +26,28 @@ public class Controller implements ViewListener {
     @Override
     public void clear() {
         model.clear();
-        view.updateMap();
+        view.update();
         view.stopTimer();
     }
 
     @Override
     public void init() {
         model.init();
-        view.updateMap();
+        view.update();
         view.startTimer();
     }
 
     @Override
     public void addPoints(Point[] points) {
         model.addPoints(points);
-        view.updateMap();
+        view.update();
         view.startTimer();
     }
 
     @Override
     public void doSteps(int numSteps) {
         model.doSteps(numSteps);
-        view.updateMap();
+        view.update();
     }
 
     @Override
@@ -58,5 +58,10 @@ public class Controller implements ViewListener {
     @Override
     public int getStep() {
         return model.getStep();
+    }
+
+    @Override
+    public int getNumAliveCells() {
+        return model.getNumAliveCells();
     }
 }

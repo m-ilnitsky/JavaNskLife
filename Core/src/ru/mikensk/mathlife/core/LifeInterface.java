@@ -25,4 +25,6 @@ public interface LifeInterface {
     GameMap getMap();
 
     int getStep();
+
+    int getNumAliveCells();
 }

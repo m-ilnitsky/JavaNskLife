@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Core/Core.iml" filepath="$PROJECT_DIR$/Core/Core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LifeSwing/LifeSwing.iml" filepath="$PROJECT_DIR$/LifeSwing/LifeSwing.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/MathLife.iml" filepath="$PROJECT_DIR$/.idea/MathLife.iml" />
     </modules>
   </component>
