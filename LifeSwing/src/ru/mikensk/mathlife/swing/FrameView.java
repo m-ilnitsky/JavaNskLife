@@ -22,13 +22,14 @@ public class FrameView implements ViewAutoCloseable {
     int xSize;
     int ySize;
 
-    private final Timer timer = new Timer(10, l -> doStep());
+    private final Timer timer = new Timer(500, l -> doStep());
 
     private final static String stepStr = "Шаг: ";
     private final static String numStr = "Количество живых ячеек: ";
 
-    private final JFrame frame = new JFrame(":Жизнь");
-    private final JPanel mapPanel = new JPanel();
+    private final JFrame frame = new JFrame("Жизнь");
+    private final MapPanel mapPanel = new MapPanel(cellSize);
+
     private final JPanel infoPanel = new JPanel();
     private final JLabel stepLabel = new JLabel(stepStr);
     private final JLabel numLabel = new JLabel(numStr);
@@ -85,6 +86,7 @@ public class FrameView implements ViewAutoCloseable {
 
             setMapSize();
             core.init();
+            mapPanel.setSize(xSize, ySize, gameMap);
 
             timer.start();
         });
@@ -117,8 +119,11 @@ public class FrameView implements ViewAutoCloseable {
 
     @Override
     public void update() {
-        stepLabel.setText(stepStr+core.getStep());
-        numLabel.setText(numStr+core.getNumAliveCells());
+        stepLabel.setText(stepStr + core.getStep());
+        numLabel.setText(numStr + core.getNumAliveCells());
+        mapPanel.updateMap();
+        //frame.repaint();
+        //mapPanel.repaint();
     }
 
     private void doStep() {

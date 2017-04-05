@@ -34,7 +34,7 @@ public class LifeCore implements LifeInterface {
 
     @Override
     public void init() {
-        init(0.2);
+        init(0.1);
     }
 
     @Override
