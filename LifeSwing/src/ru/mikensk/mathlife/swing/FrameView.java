@@ -5,8 +5,6 @@ import ru.mikensk.mathlife.core.GameMap;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 /**
  * Графический интерфейс (представление) на основе Swing для игры "Жизнь"
@@ -15,28 +13,29 @@ public class FrameView implements ViewAutoCloseable {
     private ViewListener core;
     private GameMap gameMap;
 
-    private final static int cellSize = 4;
+    private int cellSize;
+    private int height;
+    private int width;
+    private int xSize;
+    private int ySize;
 
-    int height;
-    int width;
-    int xSize;
-    int ySize;
-
-    private final Timer timer = new Timer(500, l -> doStep());
+    private final Timer timer = new Timer(100, l -> doStep());
 
     private final static String stepStr = "Шаг: ";
     private final static String numStr = "Количество живых ячеек: ";
 
     private final JFrame frame = new JFrame("Жизнь");
-    private final MapPanel mapPanel = new MapPanel(cellSize);
+    private final MapPanel mapPanel;
 
     private final JPanel infoPanel = new JPanel();
     private final JLabel stepLabel = new JLabel(stepStr);
     private final JLabel numLabel = new JLabel(numStr);
 
-    public FrameView(int width, int height) {
+    public FrameView(int width, int height, int cellSize) {
         this.width = width;
         this.height = height;
+        this.cellSize = cellSize;
+        mapPanel = new MapPanel(cellSize, this);
     }
 
     private void initInfoPanel() {
@@ -61,7 +60,7 @@ public class FrameView implements ViewAutoCloseable {
         frame.add(infoPanel, BorderLayout.NORTH);
         frame.add(mapPanel, BorderLayout.CENTER);
 
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         Dimension dimension = new Dimension(width, height);
 
@@ -86,7 +85,7 @@ public class FrameView implements ViewAutoCloseable {
 
             setMapSize();
             core.init();
-            mapPanel.setSize(xSize, ySize, gameMap);
+            mapPanel.init(xSize, ySize, gameMap, core);
 
             timer.start();
         });
@@ -122,8 +121,6 @@ public class FrameView implements ViewAutoCloseable {
         stepLabel.setText(stepStr + core.getStep());
         numLabel.setText(numStr + core.getNumAliveCells());
         mapPanel.updateMap();
-        //frame.repaint();
-        //mapPanel.repaint();
     }
 
     private void doStep() {

@@ -8,7 +8,7 @@ import ru.mikensk.mathlife.core.LifeCore;
  */
 public class Application {
     public static void main(String[] args) {
-        try (ViewAutoCloseable view = new FrameView(400, 500)) {
+        try (ViewAutoCloseable view = new FrameView(400, 500, 6)) {
             LifeCore lifeCore = new LifeCore();
 
             Controller controller = new Controller(lifeCore, view);

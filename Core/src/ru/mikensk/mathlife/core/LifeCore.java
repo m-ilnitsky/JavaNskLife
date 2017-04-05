@@ -108,17 +108,15 @@ public class LifeCore implements LifeInterface {
         }
 
         int count = 0;
-
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMin; j <= yMax; j++) {
-                if (!(i == xPosition) || !(j == yPosition)) {
+                if ((i != xPosition) || (j != yPosition)) {
                     if (cells[i][j]) {
                         count++;
                     }
                 }
             }
         }
-
         return count;
     }
 
@@ -132,7 +130,7 @@ public class LifeCore implements LifeInterface {
             for (int j = 0; j < cells[0].length; j++) {
                 int numAliveCells = calcAliveCellsAround(i, j);
                 if (cells[i][j]) {
-                    nextState[i][j] = (numAliveCells == 2 || numAliveCells == 3);
+                    nextState[i][j] = (numAliveCells == 2);
                 } else {
                     nextState[i][j] = (numAliveCells == 3);
                 }
