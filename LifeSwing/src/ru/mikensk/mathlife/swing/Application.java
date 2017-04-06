@@ -8,7 +8,14 @@ import ru.mikensk.mathlife.core.LifeCore;
  */
 public class Application {
     public static void main(String[] args) {
-        try (ViewAutoCloseable view = new FrameView(400, 500, 6)) {
+        SizeDialog sizeDialog = new SizeDialog(640, 480, 8);
+        sizeDialog.showDialog();
+
+        while (sizeDialog.isVisible()) ;
+
+        GameSize gameSize = sizeDialog.getGameSize();
+
+        try (ViewAutoCloseable view = new FrameView(gameSize.getWidth(), gameSize.getHeight(), gameSize.getCellSize())) {
             LifeCore lifeCore = new LifeCore();
 
             Controller controller = new Controller(lifeCore, view);

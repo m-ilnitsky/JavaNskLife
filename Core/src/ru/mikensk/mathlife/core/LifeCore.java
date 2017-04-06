@@ -74,6 +74,10 @@ public class LifeCore implements LifeInterface {
         }
 
         cells[point.x][point.y] = true;
+
+        if (numAliveCells == 0) {
+            numAliveCells = 1;
+        }
     }
 
     @Override
@@ -81,6 +85,7 @@ public class LifeCore implements LifeInterface {
         for (Point p : points) {
             addPoint(p);
         }
+        numAliveCells = map.getNumAliveCells();
     }
 
     private int calcAliveCellsAround(int xPosition, int yPosition) {
@@ -130,13 +135,16 @@ public class LifeCore implements LifeInterface {
             for (int j = 0; j < cells[0].length; j++) {
                 int numAliveCells = calcAliveCellsAround(i, j);
                 if (cells[i][j]) {
-                    nextState[i][j] = (numAliveCells == 2);
+                    nextState[i][j] = (numAliveCells == 2 || numAliveCells == 3);
                 } else {
                     nextState[i][j] = (numAliveCells == 3);
                 }
             }
         }
-        System.arraycopy(nextState, 0, cells, 0, cells.length);
+
+        for (int i = 0; i < cells.length; i++) {
+            System.arraycopy(nextState[i], 0, cells[i], 0, cells[i].length);
+        }
 
         numAliveCells = map.getNumAliveCells();
         step++;
