@@ -8,20 +8,27 @@ import ru.mikensk.mathlife.core.LifeCore;
  */
 public class Application {
     public static void main(String[] args) {
-        SizeDialog sizeDialog = new SizeDialog(640, 480, 8);
-        sizeDialog.showDialog();
+        try (SizeDialog sizeDialog = new SizeDialog(640, 480, 8)) {
 
-        while (sizeDialog.isVisible()) ;
+            sizeDialog.showDialog();
 
-        GameSize gameSize = sizeDialog.getGameSize();
+            while (sizeDialog.isVisible()) {
+                System.out.println("wait");
+            }
 
-        try (ViewAutoCloseable view = new FrameView(gameSize.getWidth(), gameSize.getHeight(), gameSize.getCellSize())) {
-            LifeCore lifeCore = new LifeCore();
+            GameSize gameSize = sizeDialog.getGameSize();
 
-            Controller controller = new Controller(lifeCore, view);
+            try (ViewAutoCloseable view = new FrameView(gameSize.getWidth(), gameSize.getHeight(), gameSize.getCellSize())) {
 
-            view.setViewListener(controller);
-            view.startApplication();
+                LifeCore lifeCore = new LifeCore();
+                Controller controller = new Controller(lifeCore, view);
+
+                view.setViewListener(controller);
+                view.startApplication();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

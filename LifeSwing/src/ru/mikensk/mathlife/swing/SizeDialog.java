@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 /**
  * Диалог выбора размеров окна и ячейки для игры "Жизнь"
  */
-class SizeDialog {
+class SizeDialog implements AutoCloseable {
     private int width;
     private int height;
     private int cellSize;
@@ -112,11 +112,7 @@ class SizeDialog {
     }
 
     public boolean isVisible() {
-        if (dialog == null) {
-            return false;
-        } else {
-            return dialog.isVisible();
-        }
+        return (dialog != null && dialog.isVisible());
     }
 
     private void showErrorMessage(Window fromFrame, String message) {
@@ -124,6 +120,14 @@ class SizeDialog {
                 message,
                 "Ошибка",
                 JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    @Override
+    public void close() throws Exception {
+        if (dialog != null) {
+            dialog.setVisible(false);
+            dialog = null;
+        }
     }
 }
 
