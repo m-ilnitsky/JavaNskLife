@@ -1,6 +1,4 @@
-package ru.mikensk.mathlife.swing;
-
-import ru.mikensk.mathlife.core.GameMap;
+package ru.mikensk.mathlife.swing.view;
 
 /**
  * Размеры окна и ячейки для игры "Жизнь"

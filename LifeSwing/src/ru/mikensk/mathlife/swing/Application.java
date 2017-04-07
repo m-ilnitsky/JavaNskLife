@@ -2,13 +2,17 @@ package ru.mikensk.mathlife.swing;
 
 import ru.mikensk.mathlife.controller.Controller;
 import ru.mikensk.mathlife.core.LifeCore;
+import ru.mikensk.mathlife.swing.view.FrameView;
+import ru.mikensk.mathlife.swing.view.GameSize;
+import ru.mikensk.mathlife.swing.view.SizeDialog;
+import ru.mikensk.mathlife.swing.view.ViewAutoCloseable;
 
 /**
  * Программа "Жизнь" с графическим интерфейсом на основе Swing
  */
 public class Application {
     public static void main(String[] args) {
-        try (SizeDialog sizeDialog = new SizeDialog(600, 400, 8)) {
+        try (SizeDialog sizeDialog = new SizeDialog(600, 600, 8)) {
 
             sizeDialog.showDialog();
 

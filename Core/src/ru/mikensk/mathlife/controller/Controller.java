@@ -48,6 +48,13 @@ public class Controller implements ViewListener {
     }
 
     @Override
+    public void init(double ratio) {
+        model.init(ratio);
+        view.update();
+        view.startTimer();
+    }
+
+    @Override
     public void addPoints(Point[] points) {
         model.addPoints(points);
         view.update();

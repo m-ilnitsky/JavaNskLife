@@ -5,7 +5,7 @@ import ru.mikensk.mathlife.core.GameMap;
 import java.awt.*;
 
 /**
- * Интерфейс подписчика на события представления для игры Жизнь
+ * Интерфейс подписчика на события представления для игры "Жизнь"
  */
 public interface ViewListener {
     void setMapSize(int xSize, int ySize);
@@ -17,6 +17,8 @@ public interface ViewListener {
     void clear();
 
     void init();
+
+    void init(double ratio);
 
     void addPoints(Point[] points);
 

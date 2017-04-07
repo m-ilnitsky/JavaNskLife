@@ -1,4 +1,4 @@
-package ru.mikensk.mathlife.swing;
+package ru.mikensk.mathlife.swing.view;
 
 import ru.mikensk.mathlife.controller.View;
 import ru.mikensk.mathlife.controller.ViewListener;

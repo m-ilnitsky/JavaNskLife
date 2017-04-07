@@ -1,4 +1,4 @@
-package ru.mikensk.mathlife.swing;
+package ru.mikensk.mathlife.swing.view;
 
 import ru.mikensk.mathlife.controller.ViewListener;
 import ru.mikensk.mathlife.core.GameMap;
@@ -95,9 +95,8 @@ public class FrameView implements ViewAutoCloseable {
             buttons[i] = new JButton(buttonText[i]);
 
             Integer index = i;
-            buttons[i].addActionListener(e -> {
-                core.doSteps(buttonStep[index]);
-            });
+            buttons[i].addActionListener(e ->
+                    core.doSteps(buttonStep[index]));
         }
 
         buttonPeriodicity.addActionListener(e -> {
@@ -110,13 +109,9 @@ public class FrameView implements ViewAutoCloseable {
             }
         });
 
-        buttonClear.addActionListener(e -> {
-            core.clear();
-        });
+        buttonClear.addActionListener(e -> core.clear());
 
-        buttonRandom.addActionListener(e -> {
-            core.init();
-        });
+        buttonRandom.addActionListener(e -> core.init());
     }
 
     private void initInfoPanel() {

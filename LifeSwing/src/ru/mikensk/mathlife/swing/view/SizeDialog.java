@@ -1,4 +1,4 @@
-package ru.mikensk.mathlife.swing;
+package ru.mikensk.mathlife.swing.view;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 /**
  * Диалог выбора размеров окна и ячейки для игры "Жизнь"
  */
-class SizeDialog implements AutoCloseable {
+public class SizeDialog implements AutoCloseable {
     private int width;
     private int height;
     private int cellSize;
