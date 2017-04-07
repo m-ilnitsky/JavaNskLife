@@ -24,6 +24,16 @@ public class Controller implements ViewListener {
     }
 
     @Override
+    public void setPeriodic(boolean periodicFlag) {
+        model.setPeriodic(periodicFlag);
+    }
+
+    @Override
+    public boolean isPeriodic() {
+        return model.isPeriodic();
+    }
+
+    @Override
     public void clear() {
         model.clear();
         view.update();
@@ -40,6 +50,13 @@ public class Controller implements ViewListener {
     @Override
     public void addPoints(Point[] points) {
         model.addPoints(points);
+        view.update();
+        view.startTimer();
+    }
+
+    @Override
+    public void clearPoints(Point[] points) {
+        model.clearPoints(points);
         view.update();
         view.startTimer();
     }

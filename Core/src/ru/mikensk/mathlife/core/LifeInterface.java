@@ -8,15 +8,19 @@ import java.awt.*;
 public interface LifeInterface {
     void setMapSize(int xSize, int ySize);
 
+    void setPeriodic(boolean periodicFlag);
+
+    boolean isPeriodic();
+
     void clear();
 
     void init();
 
     void init(double ratio);
 
-    void addPoint(Point point);
-
     void addPoints(Point[] points);
+
+    void clearPoints(Point[] points);
 
     void doStep();
 

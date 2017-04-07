@@ -8,7 +8,7 @@ import ru.mikensk.mathlife.core.LifeCore;
  */
 public class Application {
     public static void main(String[] args) {
-        try (SizeDialog sizeDialog = new SizeDialog(640, 480, 8)) {
+        try (SizeDialog sizeDialog = new SizeDialog(600, 400, 8)) {
 
             sizeDialog.showDialog();
 

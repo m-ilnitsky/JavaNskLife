@@ -10,11 +10,17 @@ import java.awt.*;
 public interface ViewListener {
     void setMapSize(int xSize, int ySize);
 
+    void setPeriodic(boolean periodicFlag);
+
+    boolean isPeriodic();
+
     void clear();
 
     void init();
 
     void addPoints(Point[] points);
+
+    void clearPoints(Point[] points);
 
     void doSteps(int numSteps);
 

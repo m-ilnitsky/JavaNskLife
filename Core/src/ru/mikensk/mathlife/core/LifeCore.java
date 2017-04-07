@@ -14,11 +14,31 @@ public class LifeCore implements LifeInterface {
     private int numAliveCells = 0;
     private int step = 0;
 
+    private int maxX;
+    private int maxY;
+
+    private boolean periodicFlag = false;
+    private int[] xCoordinates = new int[3];
+    private int[] yCoordinates = new int[3];
+
     @Override
     public void setMapSize(int xSize, int ySize) {
         nextState = new boolean[xSize][ySize];
         cells = new boolean[xSize][ySize];
         map = new GameMap(cells);
+
+        maxX = xSize - 1;
+        maxY = ySize - 1;
+    }
+
+    @Override
+    public void setPeriodic(boolean periodicFlag) {
+        this.periodicFlag = periodicFlag;
+    }
+
+    @Override
+    public boolean isPeriodic() {
+        return periodicFlag;
     }
 
     @Override
@@ -58,8 +78,7 @@ public class LifeCore implements LifeInterface {
         numAliveCells = map.getNumAliveCells();
     }
 
-    @Override
-    public void addPoint(Point point) {
+    private void checkPoint(Point point) {
         if (point.x < 0) {
             throw new IllegalArgumentException("point.x < 0 : point.x = " + point.x);
         }
@@ -72,12 +91,11 @@ public class LifeCore implements LifeInterface {
         if (point.y >= cells[0].length) {
             throw new IllegalArgumentException("point.y >= ySize : point.y = " + point.y);
         }
+    }
 
+    private void addPoint(Point point) {
+        checkPoint(point);
         cells[point.x][point.y] = true;
-
-        if (numAliveCells == 0) {
-            numAliveCells = 1;
-        }
     }
 
     @Override
@@ -88,11 +106,24 @@ public class LifeCore implements LifeInterface {
         numAliveCells = map.getNumAliveCells();
     }
 
-    private int calcAliveCellsAround(int xPosition, int yPosition) {
+    private void clearPoint(Point point) {
+        checkPoint(point);
+        cells[point.x][point.y] = false;
+    }
+
+    @Override
+    public void clearPoints(Point[] points) {
+        for (Point p : points) {
+            clearPoint(p);
+        }
+        numAliveCells = map.getNumAliveCells();
+    }
+
+    private int calcAroundSimple(int xPosition, int yPosition) {
         int xMin;
-        int xMax = cells.length - 1;
+        int xMax = maxX;
         int yMin;
-        int yMax = cells[0].length - 1;
+        int yMax = maxY;
 
         if (xPosition < xMax) {
             xMax = xPosition + 1;
@@ -123,6 +154,52 @@ public class LifeCore implements LifeInterface {
             }
         }
         return count;
+    }
+
+    private int calcAliveCellsAround(int xPosition, int yPosition) {
+        if (periodicFlag) {
+            return calcAroundPeriodic(xPosition, yPosition);
+        } else {
+            return calcAroundSimple(xPosition, yPosition);
+        }
+    }
+
+    private int calcAroundPeriodic(int xPosition, int yPosition) {
+        if (xPosition > 0 && yPosition > 0 && xPosition < maxX && yPosition < maxY) {
+            return calcAroundSimple(xPosition, yPosition);
+        } else {
+            for (int x = xPosition - 1, i = 0; i < 3; x++, i++) {
+                if (x < 0) {
+                    xCoordinates[i] = maxX;
+                } else if (x > maxX) {
+                    xCoordinates[i] = 0;
+                } else {
+                    xCoordinates[i] = x;
+                }
+            }
+
+            for (int y = yPosition - 1, i = 0; i < 3; y++, i++) {
+                if (y < 0) {
+                    yCoordinates[i] = maxY;
+                } else if (y > maxY) {
+                    yCoordinates[i] = 0;
+                } else {
+                    yCoordinates[i] = y;
+                }
+            }
+
+            int count = 0;
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (j != 1 || i != 1) {
+                        if (cells[xCoordinates[i]][yCoordinates[j]]) {
+                            count++;
+                        }
+                    }
+                }
+            }
+            return count;
+        }
     }
 
     @Override

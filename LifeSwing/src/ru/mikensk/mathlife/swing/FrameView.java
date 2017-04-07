@@ -5,6 +5,7 @@ import ru.mikensk.mathlife.core.GameMap;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.Instant;
 
 /**
  * Графический интерфейс (представление) на основе Swing для игры "Жизнь"
@@ -22,8 +23,12 @@ public class FrameView implements ViewAutoCloseable {
     private final Timer timer = new Timer(0, l -> doStep());
     private boolean timerOn;
 
+    private long lastTime;
+    private int lastStep;
+
     private final static String stepStr = "Шаг: ";
     private final static String numStr = "Количество живых ячеек: ";
+    private final static String rateStr = "Шагов/сек: ";
 
     private final JFrame frame = new JFrame("Жизнь");
     private final JPanel topPanel = new JPanel();
@@ -31,15 +36,17 @@ public class FrameView implements ViewAutoCloseable {
     private final JPanel infoPanel = new JPanel();
     private final JLabel stepLabel = new JLabel(stepStr);
     private final JLabel numLabel = new JLabel(numStr);
+    private final JLabel rateLabel = new JLabel(rateStr);
 
     private final JPanel radioButtonPanel = new JPanel();
     private final JRadioButton radioButtonOff = new JRadioButton("Стоп");
-    private final String[] radioButtonText = {"1сек", "0.3сек", "0.1сек", "0.03сек", "0.01сек"};
-    private final int[] radioButtonDelay = {1000, 300, 100, 30, 10};
+    private final String[] radioButtonText = {"1сек", "0.5сек", "0.2сек", "0.1сек", "0.05сек", "0.02сек", "0.01сек"};
+    private final int[] radioButtonDelay = {1000, 500, 200, 100, 50, 20, 10};
     private final JRadioButton[] radioButtons = new JRadioButton[radioButtonText.length];
     private final ButtonGroup buttonGroup = new ButtonGroup();
 
     private final JPanel buttonPanel = new JPanel();
+    private final JToggleButton buttonPeriodicity = new JToggleButton("Периодичность");
     private final JButton buttonClear = new JButton("Очистить");
     private final JButton buttonRandom = new JButton("Наполнить");
     private final String[] buttonText = {"+1шаг", "+10шагов", "+100шагов", "+1000шагов"};
@@ -67,6 +74,7 @@ public class FrameView implements ViewAutoCloseable {
             timer.setDelay(0);
             timerOn = false;
             timer.stop();
+            rateLabel.setVisible(false);
         });
 
         for (int i = 0; i < radioButtons.length; i++) {
@@ -75,6 +83,7 @@ public class FrameView implements ViewAutoCloseable {
                 timer.setDelay(radioButtonDelay[index]);
                 timerOn = true;
                 timer.start();
+                rateLabel.setVisible(true);
             });
         }
 
@@ -90,6 +99,16 @@ public class FrameView implements ViewAutoCloseable {
                 core.doSteps(buttonStep[index]);
             });
         }
+
+        buttonPeriodicity.addActionListener(e -> {
+            if (core.isPeriodic()) {
+                core.setPeriodic(false);
+                buttonPeriodicity.setSelected(false);
+            } else {
+                core.setPeriodic(true);
+                buttonPeriodicity.setSelected(true);
+            }
+        });
 
         buttonClear.addActionListener(e -> {
             core.clear();
@@ -107,9 +126,11 @@ public class FrameView implements ViewAutoCloseable {
 
         stepLabel.setFont(groupFont);
         numLabel.setFont(groupFont);
+        rateLabel.setFont(groupFont);
 
         infoPanel.add(stepLabel);
         infoPanel.add(numLabel);
+        infoPanel.add(rateLabel);
 
         infoPanel.setVisible(true);
     }
@@ -129,6 +150,7 @@ public class FrameView implements ViewAutoCloseable {
     private void initButtonPanel() {
         buttonPanel.setLayout(new GridLayout(1, 2 + buttons.length));
 
+        buttonPanel.add(buttonPeriodicity);
         buttonPanel.add(buttonClear);
         buttonPanel.add(buttonRandom);
 
@@ -191,6 +213,9 @@ public class FrameView implements ViewAutoCloseable {
             setMapSize();
             core.init();
             mapPanel.init(xSize, ySize, gameMap, core);
+
+            lastStep = 0;
+            lastTime = Instant.now().getEpochSecond();
         });
     }
 
@@ -223,9 +248,18 @@ public class FrameView implements ViewAutoCloseable {
 
     @Override
     public void update() {
-        stepLabel.setText(stepStr + core.getStep());
+        int step = core.getStep();
+        stepLabel.setText(stepStr + step);
         numLabel.setText(numStr + core.getNumAliveCells());
+
         mapPanel.updateMap();
+
+        long time = Instant.now().getEpochSecond();
+        if (step != lastStep && time != lastTime) {
+            rateLabel.setText(rateStr + ((step - lastStep) / (time - lastTime)));
+            lastTime = time;
+            lastStep = step;
+        }
     }
 
     private void doStep() {

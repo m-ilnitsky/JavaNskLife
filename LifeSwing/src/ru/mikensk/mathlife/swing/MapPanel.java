@@ -20,25 +20,30 @@ public class MapPanel extends JPanel {
     private int cellSize;
     private int xSize;
     private int ySize;
+
+    private ViewListener core;
     private GameMap map;
+    private View view;
+
     private BufferedImage image;
     private Graphics2D graphics;
-    private View view;
-    private boolean inputKey;
+    private boolean inputFlag;
     private ArrayList<Point> points;
+    private boolean clearFlag = false;
 
     public MapPanel(int cellSize, View view) {
         super();
         this.cellSize = cellSize;
         this.view = view;
-        inputKey = false;
+        inputFlag = false;
     }
 
     public void init(int xSize, int ySize, GameMap map, ViewListener core) {
         this.xSize = xSize;
         this.ySize = ySize;
-
         this.map = map;
+        this.core = core;
+
         image = new BufferedImage(xSize * cellSize, ySize * cellSize, TYPE_INT_RGB);
         graphics = (Graphics2D) image.getGraphics();
         updateMap();
@@ -48,7 +53,7 @@ public class MapPanel extends JPanel {
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
-                if (inputKey && points != null) {
+                if (inputFlag && points != null) {
                     Point panelPoint = e.getPoint();
                     Point point = new Point((int) (1.0 * panelPoint.x / getWidth() * xSize), (int) (1.0 * panelPoint.y / getHeight() * ySize));
                     points.add(point);
@@ -61,8 +66,16 @@ public class MapPanel extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    clearFlag = false;
+                } else if (e.getButton() == MouseEvent.BUTTON3) {
+                    clearFlag = true;
+                } else {
+                    return;
+                }
+
                 view.stopTimer();
-                inputKey = true;
+                inputFlag = true;
                 points = new ArrayList<>(64);
 
                 Point panelPoint = e.getPoint();
@@ -73,24 +86,27 @@ public class MapPanel extends JPanel {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (inputKey && points != null) {
-                    inputKey = false;
-                    core.addPoints(points.toArray(new Point[1]));
-                    points = null;
-                    view.startTimer();
-                }
+                sendPoints();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if (inputKey && points != null) {
-                    inputKey = false;
-                    core.addPoints(points.toArray(new Point[1]));
-                    points = null;
-                    view.startTimer();
-                }
+                sendPoints();
             }
         });
+    }
+
+    private void sendPoints() {
+        if (inputFlag && points != null) {
+            inputFlag = false;
+            if (clearFlag) {
+                core.clearPoints(points.toArray(new Point[1]));
+            } else {
+                core.addPoints(points.toArray(new Point[1]));
+            }
+            points = null;
+            view.startTimer();
+        }
     }
 
     public void updateMap() {
@@ -111,7 +127,11 @@ public class MapPanel extends JPanel {
 
     private void addPointToMap(Point point) {
         if (map != null && image != null) {
-            graphics.setColor(Color.RED);
+            if (clearFlag) {
+                graphics.setColor(Color.WHITE);
+            } else {
+                graphics.setColor(Color.RED);
+            }
             graphics.fillRect(point.x * cellSize, point.y * cellSize, cellSize, cellSize);
             repaint();
         }
