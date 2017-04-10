@@ -6,8 +6,7 @@ import ru.mikensk.mathlife.core.GameMap;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -47,6 +46,16 @@ public class MapPanel extends JPanel {
         image = new BufferedImage(xSize * cellSize, ySize * cellSize, TYPE_INT_RGB);
         graphics = (Graphics2D) image.getGraphics();
         updateMap();
+
+        addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+
+                EscPressed(e);
+            }
+        });
 
         addMouseMotionListener(new MouseAdapter() {
 
@@ -94,6 +103,15 @@ public class MapPanel extends JPanel {
                 sendPoints();
             }
         });
+    }
+
+    public void EscPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE && inputFlag) {
+            inputFlag = false;
+            points = null;
+            view.startTimer();
+            updateMap();
+        }
     }
 
     private void sendPoints() {

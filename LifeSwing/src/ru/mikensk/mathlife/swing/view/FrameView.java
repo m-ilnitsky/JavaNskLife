@@ -5,7 +5,12 @@ import ru.mikensk.mathlife.core.GameMap;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.time.Instant;
+
+import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
 
 /**
  * Графический интерфейс (представление) на основе Swing для игры "Жизнь"
@@ -60,6 +65,15 @@ public class FrameView implements ViewAutoCloseable {
         this.height = height;
         this.cellSize = cellSize;
         mapPanel = new MapPanel(cellSize, this);
+
+        addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                mapPanel.EscPressed(e);
+            }
+        });
     }
 
     private void initRadioButtons() {
@@ -77,6 +91,14 @@ public class FrameView implements ViewAutoCloseable {
             rateLabel.setVisible(false);
         });
 
+        radioButtonOff.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                mapPanel.EscPressed(e);
+            }
+        });
+
         for (int i = 0; i < radioButtons.length; i++) {
             Integer index = i;
             radioButtons[i].addActionListener(e -> {
@@ -84,6 +106,14 @@ public class FrameView implements ViewAutoCloseable {
                 timerOn = true;
                 timer.start();
                 rateLabel.setVisible(true);
+            });
+
+            radioButtons[i].addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    super.keyPressed(e);
+                    mapPanel.EscPressed(e);
+                }
             });
         }
 
@@ -97,6 +127,15 @@ public class FrameView implements ViewAutoCloseable {
             Integer index = i;
             buttons[i].addActionListener(e ->
                     core.doSteps(buttonStep[index]));
+
+            buttons[i].addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    super.keyPressed(e);
+
+                    mapPanel.EscPressed(e);
+                }
+            });
         }
 
         buttonPeriodicity.addActionListener(e -> {
@@ -112,6 +151,33 @@ public class FrameView implements ViewAutoCloseable {
         buttonClear.addActionListener(e -> core.clear());
 
         buttonRandom.addActionListener(e -> core.init());
+
+        buttonPeriodicity.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+
+                mapPanel.EscPressed(e);
+            }
+        });
+
+        buttonClear.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+
+                mapPanel.EscPressed(e);
+            }
+        });
+
+        buttonRandom.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+
+                mapPanel.EscPressed(e);
+            }
+        });
     }
 
     private void initInfoPanel() {
