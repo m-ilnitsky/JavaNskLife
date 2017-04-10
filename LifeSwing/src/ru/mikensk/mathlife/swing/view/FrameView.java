@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.time.Instant;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
@@ -37,6 +36,7 @@ public class FrameView implements ViewAutoCloseable {
 
     private final JFrame frame = new JFrame("Жизнь");
     private final JPanel topPanel = new JPanel();
+    private final JPanel bottomPanel = new JPanel();
 
     private final JPanel infoPanel = new JPanel();
     private final JLabel stepLabel = new JLabel(stepStr);
@@ -48,15 +48,21 @@ public class FrameView implements ViewAutoCloseable {
     private final String[] radioButtonText = {"1сек", "0.5сек", "0.2сек", "0.1сек", "0.05сек", "0.02сек", "0.01сек"};
     private final int[] radioButtonDelay = {1000, 500, 200, 100, 50, 20, 10};
     private final JRadioButton[] radioButtons = new JRadioButton[radioButtonText.length];
-    private final ButtonGroup buttonGroup = new ButtonGroup();
+    private final ButtonGroup delayButtonGroup = new ButtonGroup();
 
     private final JPanel buttonPanel = new JPanel();
     private final JToggleButton buttonPeriodicity = new JToggleButton("Периодичность");
-    private final JButton buttonClear = new JButton("Очистить");
-    private final JButton buttonRandom = new JButton("Наполнить");
     private final String[] buttonText = {"+1шаг", "+10шагов", "+100шагов", "+1000шагов"};
     private final int[] buttonStep = {1, 10, 100, 1000};
     private final JButton[] buttons = new JButton[buttonText.length];
+
+    private final JButton buttonClear = new JButton("Очистить");
+    private final JButton buttonRandom = new JButton("Наполнить");
+    private final JToggleButton buttonPencil = new JToggleButton("Карандаш");
+    private final JToggleButton buttonLine = new JToggleButton("Линия");
+    private final JToggleButton buttonRect = new JToggleButton("Прямоугольник");
+    private final JToggleButton buttonOval = new JToggleButton("Эллипс");
+    private final ButtonGroup toolButtonGroup = new ButtonGroup();
 
     private final MapPanel mapPanel;
 
@@ -77,11 +83,11 @@ public class FrameView implements ViewAutoCloseable {
     }
 
     private void initRadioButtons() {
-        buttonGroup.add(radioButtonOff);
+        delayButtonGroup.add(radioButtonOff);
 
         for (int i = 0; i < radioButtons.length; i++) {
             radioButtons[i] = new JRadioButton(radioButtonText[i]);
-            buttonGroup.add(radioButtons[i]);
+            delayButtonGroup.add(radioButtons[i]);
         }
 
         radioButtonOff.addActionListener(e -> {
@@ -132,7 +138,6 @@ public class FrameView implements ViewAutoCloseable {
                 @Override
                 public void keyPressed(KeyEvent e) {
                     super.keyPressed(e);
-
                     mapPanel.EscPressed(e);
                 }
             });
@@ -148,36 +153,81 @@ public class FrameView implements ViewAutoCloseable {
             }
         });
 
-        buttonClear.addActionListener(e -> core.clear());
-
-        buttonRandom.addActionListener(e -> core.init());
-
         buttonPeriodicity.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-
                 mapPanel.EscPressed(e);
             }
         });
+
+        buttonClear.addActionListener(e -> core.clear());
 
         buttonClear.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-
                 mapPanel.EscPressed(e);
             }
         });
+
+        buttonRandom.addActionListener(e -> core.init());
 
         buttonRandom.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-
                 mapPanel.EscPressed(e);
             }
         });
+
+        buttonPencil.addActionListener(e -> mapPanel.setPencil());
+
+        buttonPencil.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                mapPanel.EscPressed(e);
+            }
+        });
+
+        buttonLine.addActionListener(e -> mapPanel.setFigure(Figure.LINE));
+
+        buttonLine.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                mapPanel.EscPressed(e);
+            }
+        });
+
+        buttonRect.addActionListener(e -> mapPanel.setFigure(Figure.RECT));
+
+        buttonRect.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                mapPanel.EscPressed(e);
+            }
+        });
+
+        buttonOval.addActionListener(e -> mapPanel.setFigure(Figure.OVAL));
+
+        buttonOval.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                mapPanel.EscPressed(e);
+            }
+        });
+
+        toolButtonGroup.add(buttonPencil);
+        toolButtonGroup.add(buttonLine);
+        toolButtonGroup.add(buttonRect);
+        toolButtonGroup.add(buttonOval);
+
+        buttonPeriodicity.doClick();
+        buttonPencil.doClick();
     }
 
     private void initInfoPanel() {
@@ -209,11 +259,9 @@ public class FrameView implements ViewAutoCloseable {
     }
 
     private void initButtonPanel() {
-        buttonPanel.setLayout(new GridLayout(1, 2 + buttons.length));
+        buttonPanel.setLayout(new GridLayout(1, 1 + buttons.length));
 
         buttonPanel.add(buttonPeriodicity);
-        buttonPanel.add(buttonClear);
-        buttonPanel.add(buttonRandom);
 
         for (JButton b : buttons) {
             buttonPanel.add(b);
@@ -232,6 +280,28 @@ public class FrameView implements ViewAutoCloseable {
         topPanel.setVisible(true);
     }
 
+    private void initBottomPanel() {
+        bottomPanel.setLayout(new GridLayout(1, 6));
+
+        bottomPanel.add(buttonClear);
+        bottomPanel.add(buttonRandom);
+        bottomPanel.add(buttonPencil);
+        bottomPanel.add(buttonLine);
+        bottomPanel.add(buttonRect);
+        bottomPanel.add(buttonOval);
+
+        Font groupFont = new Font("TimesRoman", Font.BOLD, 14);
+
+        buttonClear.setFont(groupFont);
+        buttonRandom.setFont(groupFont);
+        buttonPencil.setFont(groupFont);
+        buttonLine.setFont(groupFont);
+        buttonRect.setFont(groupFont);
+        buttonOval.setFont(groupFont);
+
+        bottomPanel.setVisible(true);
+    }
+
     private void initMapPanel() {
         mapPanel.setVisible(true);
     }
@@ -239,6 +309,7 @@ public class FrameView implements ViewAutoCloseable {
     private void initFrame() {
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(mapPanel, BorderLayout.CENTER);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -269,6 +340,7 @@ public class FrameView implements ViewAutoCloseable {
             initInfoPanel();
             initTopPanel();
             initMapPanel();
+            initBottomPanel();
             initFrame();
 
             setMapSize();

@@ -70,11 +70,11 @@ public class MapPanel extends JPanel {
                 super.mouseDragged(e);
                 if (inputFlag) {
                     if (figureFlag && !clearFlag) {
-                        endPoint = new Point(e.getPoint().x / cellSize * cellSize, e.getPoint().y / cellSize * cellSize);
+                        endPoint = new Point((int) (1.0 * e.getPoint().x / getWidth() * xSize * cellSize) / cellSize * cellSize,
+                                (int) (1.0 * e.getPoint().y / getHeight() * ySize * cellSize) / cellSize * cellSize);
                         addFigureToMap(startPoint, endPoint);
                     } else {
-                        Point panelPoint = e.getPoint();
-                        Point point = new Point((int) (1.0 * panelPoint.x / getWidth() * xSize), (int) (1.0 * panelPoint.y / getHeight() * ySize));
+                        Point point = new Point((int) (1.0 * e.getPoint().x / getWidth() * xSize), (int) (1.0 * e.getPoint().y / getHeight() * ySize));
                         points.add(point);
                         addPointToMap(point);
                     }
@@ -98,14 +98,14 @@ public class MapPanel extends JPanel {
                 inputFlag = true;
 
                 if (figureFlag && !clearFlag) {
-                    startPoint = new Point(e.getPoint().x / cellSize * cellSize, e.getPoint().y / cellSize * cellSize);
+                    startPoint = new Point((int) (1.0 * e.getPoint().x / getWidth() * xSize * cellSize) / cellSize * cellSize,
+                            (int) (1.0 * e.getPoint().y / getHeight() * ySize * cellSize) / cellSize * cellSize);
                     endPoint = startPoint;
                     addFigureToMap(startPoint, endPoint);
                 } else {
                     points = new ArrayList<>(64);
 
-                    Point panelPoint = e.getPoint();
-                    Point point = new Point((int) (1.0 * panelPoint.x / getWidth() * xSize), (int) (1.0 * panelPoint.y / getHeight() * ySize));
+                    Point point = new Point((int) (1.0 * e.getPoint().x / getWidth() * xSize), (int) (1.0 * e.getPoint().y / getHeight() * ySize));
                     points.add(point);
                     addPointToMap(point);
                 }
@@ -116,12 +116,16 @@ public class MapPanel extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 sendPoints();
             }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                sendPoints();
-            }
         });
+    }
+
+    public void setFigure(Figure figure) {
+        figureFlag = true;
+        this.figure = figure;
+    }
+
+    public void setPencil() {
+        figureFlag = false;
     }
 
     public void EscPressed(KeyEvent e) {
@@ -169,14 +173,16 @@ public class MapPanel extends JPanel {
                 figureGraphics.drawLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
                 break;
             case RECT:
-                for (int i = 0; i < cellSize; i++) {
-                    figureGraphics.drawRect(startPoint.x + i, startPoint.y + i, endPoint.x - startPoint.x + cellSize - 1 - 2 * i, endPoint.y - startPoint.y + cellSize - 1 - 2 * i);
-                }
+                figureGraphics.drawRect(startPoint.x, startPoint.y, endPoint.x - startPoint.x, endPoint.y - startPoint.y);
+                //for (int i = 0; i < cellSize; i++) {
+                //  figureGraphics.drawRect(startPoint.x + i, startPoint.y + i, endPoint.x - startPoint.x + cellSize - 1 - 2 * i, endPoint.y - startPoint.y + cellSize - 1 - 2 * i);
+                //}
                 break;
             case OVAL:
-                for (int i = 0; i < cellSize; i++) {
-                    figureGraphics.drawOval(startPoint.x + i, startPoint.y + i, endPoint.x - startPoint.x + -2 * i, endPoint.y - startPoint.y + -2 * i);
-                }
+                figureGraphics.drawOval(startPoint.x, startPoint.y, endPoint.x - startPoint.x, endPoint.y - startPoint.y);
+                //for (int i = 0; i < cellSize; i++) {
+                //  figureGraphics.drawOval(startPoint.x + i, startPoint.y + i, endPoint.x - startPoint.x + -2 * i, endPoint.y - startPoint.y + -2 * i);
+                //}
         }
 
         points = new ArrayList<>(64);
@@ -188,11 +194,18 @@ public class MapPanel extends JPanel {
                 Color color = new Color(packedInt, true);
 
                 if (color.equals(Color.BLACK)) {
-                    count++;
+                    int x;
+                    int y;
                     if (figure == Figure.RECT) {
-                        points.add(new Point(i / cellSize, j / cellSize));
+                        x = i / cellSize;
+                        y = j / cellSize;
                     } else {
-                        points.add(new Point((int) Math.round(1.0 * i / cellSize), (int) Math.round(1.0 * j / cellSize)));
+                        x = (int) Math.round(1.0 * i / cellSize);
+                        y = (int) Math.round(1.0 * j / cellSize);
+                    }
+                    if (x >= 0 && x < xSize && y >= 0 && y < ySize) {
+                        points.add(new Point(x, y));
+                        count++;
                     }
                 }
             }
@@ -238,9 +251,14 @@ public class MapPanel extends JPanel {
                 case LINE:
                     graphics.setColor(Color.RED);
                     for (int i = 0; i < cellSize; i++) {
-                        graphics.drawLine(startPoint.x + i, startPoint.y + i, endPoint.x + i, endPoint.y + i);
-                        graphics.drawLine(startPoint.x + cellSize - 1 - i, startPoint.y + i, endPoint.x + cellSize - 1 - i, endPoint.y + i);
-                        graphics.drawLine(startPoint.x + i, startPoint.y + cellSize - 1 - i, endPoint.x + i, endPoint.y + cellSize - 1 - i);
+                        graphics.drawLine(startPoint.x, startPoint.y + i, endPoint.x + i, endPoint.y);
+                        graphics.drawLine(startPoint.x + cellSize - 1, startPoint.y + i, endPoint.x + i, endPoint.y + cellSize - 1);
+
+                        graphics.drawLine(startPoint.x + i, startPoint.y, endPoint.x, endPoint.y + i);
+                        graphics.drawLine(startPoint.x + i, startPoint.y + cellSize - 1, endPoint.x + cellSize - 1, endPoint.y + i);
+
+                        graphics.drawLine(startPoint.x + i, startPoint.y, endPoint.x + i, endPoint.y);
+                        graphics.drawLine(startPoint.x, startPoint.y + i, endPoint.x, endPoint.y + i);
                     }
                     break;
 

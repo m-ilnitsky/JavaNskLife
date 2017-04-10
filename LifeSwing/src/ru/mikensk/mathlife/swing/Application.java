@@ -12,7 +12,7 @@ import ru.mikensk.mathlife.swing.view.ViewAutoCloseable;
  */
 public class Application {
     public static void main(String[] args) {
-        try (SizeDialog sizeDialog = new SizeDialog(600, 600, 8)) {
+        try (SizeDialog sizeDialog = new SizeDialog(800, 600, 8)) {
 
             sizeDialog.showDialog();
 
