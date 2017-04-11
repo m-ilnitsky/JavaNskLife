@@ -7,37 +7,39 @@ import java.awt.event.KeyEvent;
 /**
  * Диалог выбора размеров окна и ячейки для игры "Жизнь"
  */
-public class SizeDialog implements AutoCloseable {
+public class SizeDialog {
+    private JFrame frame;
+
     private int width;
     private int height;
     private int cellSize;
 
-    private int minWidth;
-    private int minHeight;
+    private int minWidth = 200;
+    private int minHeight = 200;
     private int minCellSize = 1;
 
     private GameSize gameSize;
 
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-    private JFrame dialog;
+    public SizeDialog(JFrame frame) {
+        this.frame = frame;
+    }
 
-    public SizeDialog(int width, int height, int cellSize) {
+    public void initSize(int width, int height, int cellSize){
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
 
-        minWidth = width;
-        minHeight = height;
-
         gameSize = new GameSize(width, height, cellSize);
     }
 
-    public void showDialog() {
-        dialog = new JFrame();
+    public GameSize showDialog() {
+        final JDialog dialog = new JDialog(frame);
 
-        dialog.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         dialog.setTitle("Выбор произвольных параметров игры");
+        dialog.setModal(true);
         dialog.setSize(400, 160);
         dialog.setMinimumSize(dialog.getSize());
 
@@ -59,7 +61,6 @@ public class SizeDialog implements AutoCloseable {
 
         buttonCancel.addActionListener(actionEvent -> {
             dialog.setVisible(false);
-            dialog = null;
             System.exit(0);
         });
 
@@ -85,7 +86,6 @@ public class SizeDialog implements AutoCloseable {
                     this.gameSize = new GameSize(width, height, cellSize);
 
                     dialog.setVisible(false);
-                    dialog = null;
                 }
             } catch (NumberFormatException ex) {
                 showErrorMessage(dialog, "Вводить нужно целые положительные числа");
@@ -105,14 +105,8 @@ public class SizeDialog implements AutoCloseable {
         dialog.add(panel);
         dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
-    }
 
-    public GameSize getGameSize() {
         return gameSize;
-    }
-
-    public boolean isVisible() {
-        return (dialog != null && dialog.isVisible());
     }
 
     private void showErrorMessage(Window fromFrame, String message) {
@@ -120,14 +114,6 @@ public class SizeDialog implements AutoCloseable {
                 message,
                 "Ошибка",
                 JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    @Override
-    public void close() throws Exception {
-        if (dialog != null) {
-            dialog.setVisible(false);
-            dialog = null;
-        }
     }
 }
 

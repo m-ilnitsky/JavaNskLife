@@ -7,32 +7,32 @@ import ru.mikensk.mathlife.swing.view.GameSize;
 import ru.mikensk.mathlife.swing.view.SizeDialog;
 import ru.mikensk.mathlife.swing.view.ViewAutoCloseable;
 
+import javax.swing.*;
+
 /**
  * Программа "Жизнь" с графическим интерфейсом на основе Swing
  */
 public class Application {
     public static void main(String[] args) {
-        try (SizeDialog sizeDialog = new SizeDialog(800, 600, 8)) {
+        JFrame sizeFrame = new JFrame("Невидимый фрейм");
+        sizeFrame.setVisible(false);
 
-            sizeDialog.showDialog();
+        SizeDialog sizeDialog = new SizeDialog(sizeFrame);
+        sizeDialog.initSize(800, 600, 8);
 
-            while (sizeDialog.isVisible()) {
-                System.out.println("wait");
-            }
+        GameSize gameSize = sizeDialog.showDialog();
 
-            GameSize gameSize = sizeDialog.getGameSize();
+        sizeDialog = null;
+        sizeFrame = null;
 
-            try (ViewAutoCloseable view = new FrameView(gameSize.getWidth(), gameSize.getHeight(), gameSize.getCellSize())) {
+        try (ViewAutoCloseable view = new FrameView(gameSize.getWidth(), gameSize.getHeight(), gameSize.getCellSize())) {
 
-                LifeCore lifeCore = new LifeCore();
-                Controller controller = new Controller(lifeCore, view);
+            LifeCore lifeCore = new LifeCore();
+            Controller controller = new Controller(lifeCore, view);
 
-                view.setViewListener(controller);
-                view.startApplication();
+            view.setViewListener(controller);
+            view.startApplication();
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

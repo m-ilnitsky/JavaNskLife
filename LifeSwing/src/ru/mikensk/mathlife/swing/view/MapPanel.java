@@ -74,9 +74,14 @@ public class MapPanel extends JPanel {
                                 (int) (1.0 * e.getPoint().y / getHeight() * ySize * cellSize) / cellSize * cellSize);
                         addFigureToMap(startPoint, endPoint);
                     } else {
-                        Point point = new Point((int) (1.0 * e.getPoint().x / getWidth() * xSize), (int) (1.0 * e.getPoint().y / getHeight() * ySize));
-                        points.add(point);
-                        addPointToMap(point);
+                        int x = (int) (1.0 * e.getPoint().x / getWidth() * xSize);
+                        int y = (int) (1.0 * e.getPoint().y / getHeight() * ySize);
+
+                        if (x >= 0 && x < xSize && y >= 0 && y < ySize) {
+                            Point point = new Point(x, y);
+                            points.add(point);
+                            addPointToMap(point);
+                        }
                     }
                 }
             }
@@ -105,9 +110,14 @@ public class MapPanel extends JPanel {
                 } else {
                     points = new ArrayList<>(64);
 
-                    Point point = new Point((int) (1.0 * e.getPoint().x / getWidth() * xSize), (int) (1.0 * e.getPoint().y / getHeight() * ySize));
-                    points.add(point);
-                    addPointToMap(point);
+                    int x = (int) (1.0 * e.getPoint().x / getWidth() * xSize);
+                    int y = (int) (1.0 * e.getPoint().y / getHeight() * ySize);
+
+                    if (x >= 0 && x < xSize && y >= 0 && y < ySize) {
+                        Point point = new Point(x, y);
+                        points.add(point);
+                        addPointToMap(point);
+                    }
                 }
 
             }
