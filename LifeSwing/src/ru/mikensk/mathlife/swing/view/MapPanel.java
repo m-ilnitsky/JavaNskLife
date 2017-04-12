@@ -177,19 +177,24 @@ public class MapPanel extends JPanel {
         figureGraphics.setColor(Color.WHITE);
         figureGraphics.fillRect(0, 0, width, height);
 
+        int minX = Math.min(startPoint.x, endPoint.x);
+        int maxX = Math.max(startPoint.x, endPoint.x);
+        int minY = Math.min(startPoint.y, endPoint.y);
+        int maxY = Math.max(startPoint.y, endPoint.y);
+
         figureGraphics.setColor(Color.BLACK);
         switch (figure) {
             case LINE:
                 figureGraphics.drawLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
                 break;
             case RECT:
-                figureGraphics.drawRect(startPoint.x, startPoint.y, endPoint.x - startPoint.x, endPoint.y - startPoint.y);
+                figureGraphics.drawRect(minX, minY, maxX - minX, maxY - minY);
                 //for (int i = 0; i < cellSize; i++) {
                 //  figureGraphics.drawRect(startPoint.x + i, startPoint.y + i, endPoint.x - startPoint.x + cellSize - 1 - 2 * i, endPoint.y - startPoint.y + cellSize - 1 - 2 * i);
                 //}
                 break;
             case OVAL:
-                figureGraphics.drawOval(startPoint.x, startPoint.y, endPoint.x - startPoint.x, endPoint.y - startPoint.y);
+                figureGraphics.drawOval(minX, minY, maxX - minX, maxY - minY);
                 //for (int i = 0; i < cellSize; i++) {
                 //  figureGraphics.drawOval(startPoint.x + i, startPoint.y + i, endPoint.x - startPoint.x + -2 * i, endPoint.y - startPoint.y + -2 * i);
                 //}
@@ -256,6 +261,11 @@ public class MapPanel extends JPanel {
 
     private void addFigureToMap(Point startPoint, Point endPoint) {
         if (map != null && image != null) {
+            int minX = Math.min(startPoint.x, endPoint.x);
+            int maxX = Math.max(startPoint.x, endPoint.x);
+            int minY = Math.min(startPoint.y, endPoint.y);
+            int maxY = Math.max(startPoint.y, endPoint.y);
+
             updateMap();
             switch (figure) {
                 case LINE:
@@ -275,18 +285,18 @@ public class MapPanel extends JPanel {
                 case RECT:
                     graphics.setColor(Color.RED);
                     for (int i = 0; i < cellSize; i++) {
-                        graphics.drawRect(startPoint.x + i, startPoint.y + i, endPoint.x - startPoint.x + cellSize - 1 - 2 * i, endPoint.y - startPoint.y + cellSize - 1 - 2 * i);
+                        graphics.drawRect(minX + i, minY + i, maxX - minX + cellSize - 1 - 2 * i, maxY - minY + cellSize - 1 - 2 * i);
                     }
                     break;
 
                 case OVAL:
                     graphics.setColor(Color.GREEN);
-                    graphics.drawRect(startPoint.x, startPoint.y, endPoint.x - startPoint.x + cellSize - 1, endPoint.y - startPoint.y + cellSize - 1);
+                    graphics.drawRect(minX, minY, maxX - minX + cellSize - 1, maxY - minY + cellSize - 1);
                     graphics.setColor(Color.RED);
                     for (int i = 0; i < cellSize; i++) {
-                        graphics.drawOval(startPoint.x + i, startPoint.y + i, endPoint.x - startPoint.x + cellSize - 1 - 2 * i, endPoint.y - startPoint.y + cellSize - 1 - 2 * i);
-                        graphics.drawOval(startPoint.x + i, startPoint.y, endPoint.x - startPoint.x + cellSize - 1 - 2 * i, endPoint.y - startPoint.y + cellSize - 1);
-                        graphics.drawOval(startPoint.x, startPoint.y + i, endPoint.x - startPoint.x + cellSize - 1, endPoint.y - startPoint.y + cellSize - 1 - 2 * i);
+                        graphics.drawOval(minX + i, minY + i, maxX - minX + cellSize - 1 - 2 * i, maxY - minY + cellSize - 1 - 2 * i);
+                        graphics.drawOval(minX + i, minY, maxX - minX + cellSize - 1 - 2 * i, maxY - minY + cellSize - 1);
+                        graphics.drawOval(minX, minY + i, maxX - minX + cellSize - 1, maxY - minY + cellSize - 1 - 2 * i);
                     }
             }
             repaint();
