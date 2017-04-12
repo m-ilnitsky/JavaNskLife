@@ -39,7 +39,6 @@ public class FrameView implements ViewAutoCloseable {
     private final JPanel bottomPanel = new JPanel();
 
     private final JPopupMenu popUpMenu = new JPopupMenu();
-    ;
 
     private final JPanel infoPanel = new JPanel();
     private final JLabel stepLabel = new JLabel(stepStr);
