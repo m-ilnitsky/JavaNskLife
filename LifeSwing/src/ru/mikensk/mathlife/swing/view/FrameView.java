@@ -38,6 +38,9 @@ public class FrameView implements ViewAutoCloseable {
     private final JPanel topPanel = new JPanel();
     private final JPanel bottomPanel = new JPanel();
 
+    private final JPopupMenu popUpMenu = new JPopupMenu();
+    ;
+
     private final JPanel infoPanel = new JPanel();
     private final JLabel stepLabel = new JLabel(stepStr);
     private final JLabel numLabel = new JLabel(numStr);
@@ -306,6 +309,25 @@ public class FrameView implements ViewAutoCloseable {
         mapPanel.setVisible(true);
     }
 
+    private void initPopUpMenu() {
+        JMenuItem itemAbout = new JMenuItem("О программе");
+        popUpMenu.add(itemAbout);
+
+        itemAbout.addActionListener(l ->
+                JOptionPane.showMessageDialog(frame,
+                        new String[]{"Математическая игра Жизнь (Game of Life)",
+                                "Графический интерфейс на основе Swing",
+                                "М.Ильницкий, Новосибирск, 2017"},
+                        "О программе",
+                        JOptionPane.INFORMATION_MESSAGE)
+        );
+
+        topPanel.setComponentPopupMenu(popUpMenu);
+        infoPanel.setComponentPopupMenu(popUpMenu);
+        buttonPanel.setComponentPopupMenu(popUpMenu);
+        bottomPanel.setComponentPopupMenu(popUpMenu);
+    }
+
     private void initFrame() {
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(mapPanel, BorderLayout.CENTER);
@@ -342,6 +364,8 @@ public class FrameView implements ViewAutoCloseable {
             initMapPanel();
             initBottomPanel();
             initFrame();
+
+            initPopUpMenu();
 
             setMapSize();
             core.init();
