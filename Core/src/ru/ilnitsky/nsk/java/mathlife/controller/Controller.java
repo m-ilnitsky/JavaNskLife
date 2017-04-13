@@ -1,7 +1,7 @@
-package ru.mikensk.mathlife.controller;
+package ru.ilnitsky.nsk.java.mathlife.controller;
 
-import ru.mikensk.mathlife.core.GameMap;
-import ru.mikensk.mathlife.core.LifeInterface;
+import ru.ilnitsky.nsk.java.mathlife.core.GameMap;
+import ru.ilnitsky.nsk.java.mathlife.core.LifeInterface;
 
 import java.awt.*;
 

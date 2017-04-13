@@ -1,12 +1,14 @@
-package ru.mikensk.mathlife.swing.view;
+package ru.ilnitsky.nsk.java.mathlife.swing.view;
 
-import ru.mikensk.mathlife.controller.ViewListener;
-import ru.mikensk.mathlife.core.GameMap;
+import ru.ilnitsky.nsk.java.mathlife.controller.ViewListener;
+import ru.ilnitsky.nsk.java.mathlife.core.GameMap;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.Instant;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
@@ -332,7 +334,13 @@ public class FrameView implements ViewAutoCloseable {
         frame.add(mapPanel, BorderLayout.CENTER);
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                exitDialog();
+            }
+        });
 
         Dimension dimension = new Dimension(width, height);
 
@@ -342,6 +350,25 @@ public class FrameView implements ViewAutoCloseable {
         frame.setLocationRelativeTo(null);
 
         frame.setVisible(true);
+    }
+
+    private void exitDialog() {
+        try {
+            Object options[] = {"Да", "Нет"};
+            int result = JOptionPane.showOptionDialog(frame,
+                    "Завершить программу?",
+                    "Подтверждение завершения",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+            if (result == JOptionPane.OK_OPTION) {
+                core = null;
+                close();
+                System.exit(0);
+            }
+        } catch (Exception exception) {
+            exception.getStackTrace();
+        }
     }
 
     private void setMapSize() {

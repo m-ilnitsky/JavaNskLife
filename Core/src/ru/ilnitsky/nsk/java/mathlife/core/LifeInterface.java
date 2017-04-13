@@ -1,13 +1,11 @@
-package ru.mikensk.mathlife.controller;
-
-import ru.mikensk.mathlife.core.GameMap;
+package ru.ilnitsky.nsk.java.mathlife.core;
 
 import java.awt.*;
 
 /**
- * Интерфейс подписчика на события представления для игры "Жизнь"
+ * Интерфейс модели игры "Жизнь"
  */
-public interface ViewListener {
+public interface LifeInterface {
     void setMapSize(int xSize, int ySize);
 
     void setPeriodic(boolean periodicFlag);
@@ -23,6 +21,8 @@ public interface ViewListener {
     void addPoints(Point[] points);
 
     void clearPoints(Point[] points);
+
+    void doStep();
 
     void doSteps(int numSteps);
 

@@ -1,8 +1,8 @@
-package ru.mikensk.mathlife.swing.view;
+package ru.ilnitsky.nsk.java.mathlife.swing.view;
 
-import ru.mikensk.mathlife.controller.View;
-import ru.mikensk.mathlife.controller.ViewListener;
-import ru.mikensk.mathlife.core.GameMap;
+import ru.ilnitsky.nsk.java.mathlife.controller.View;
+import ru.ilnitsky.nsk.java.mathlife.controller.ViewListener;
+import ru.ilnitsky.nsk.java.mathlife.core.GameMap;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="NskLifeSwing:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/NskLifeSwing_jar</output-path>
+    <root id="root">
+      <element id="archive" name="NskLifeSwing.jar">
+        <element id="module-output" name="NskLifeSwing" />
+        <element id="module-output" name="Core" />
+      </element>
+    </root>
+  </artifact>
+</component>

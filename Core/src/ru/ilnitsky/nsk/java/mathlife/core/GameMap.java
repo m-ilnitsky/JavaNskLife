@@ -1,4 +1,4 @@
-package ru.mikensk.mathlife.core;
+package ru.ilnitsky.nsk.java.mathlife.core;
 
 import java.awt.*;
 

@@ -1,4 +1,4 @@
-package ru.mikensk.mathlife.swing.view;
+package ru.ilnitsky.nsk.java.mathlife.swing.view;
 
 /**
  * Фигуры для рисования

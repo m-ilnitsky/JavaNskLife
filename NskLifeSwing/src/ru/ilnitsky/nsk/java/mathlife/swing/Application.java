@@ -1,11 +1,11 @@
-package ru.mikensk.mathlife.swing;
+package ru.ilnitsky.nsk.java.mathlife.swing;
 
-import ru.mikensk.mathlife.controller.Controller;
-import ru.mikensk.mathlife.core.LifeCore;
-import ru.mikensk.mathlife.swing.view.FrameView;
-import ru.mikensk.mathlife.swing.view.GameSize;
-import ru.mikensk.mathlife.swing.view.SizeDialog;
-import ru.mikensk.mathlife.swing.view.ViewAutoCloseable;
+import ru.ilnitsky.nsk.java.mathlife.controller.Controller;
+import ru.ilnitsky.nsk.java.mathlife.core.LifeCore;
+import ru.ilnitsky.nsk.java.mathlife.swing.view.GameSize;
+import ru.ilnitsky.nsk.java.mathlife.swing.view.SizeDialog;
+import ru.ilnitsky.nsk.java.mathlife.swing.view.FrameView;
+import ru.ilnitsky.nsk.java.mathlife.swing.view.ViewAutoCloseable;
 
 import javax.swing.*;
 
